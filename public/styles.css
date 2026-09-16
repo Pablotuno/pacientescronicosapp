@@ -1,0 +1,137 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #eef2f7;
+  margin: 0;
+  padding: 0;
+}
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  background-color: #0077b6;
+}
+.tab {
+  flex: 1;
+  padding: 14px;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  border-right: 1px solid #005f8d;
+}
+.tab:last-child {
+  border-right: none;
+}
+.tab.active {
+  background-color: #023e8a;
+}
+.container {
+  max-width: 580px;
+  width: 95%;
+  margin: 0 auto;
+  padding: 16px;
+  background-color: white;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+.section {
+  display: none;
+}
+.section.active {
+  display: block;
+}
+.bloque {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px 12px;
+  margin-bottom: 25px;
+  border-left: 5px solid #ced4da;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+.form-group {
+  flex: 1 1 48%;
+  min-width: 200px;
+  position: relative;
+  margin-top: 10px;
+}
+.form-group label {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1;
+  padding: 2px 0;
+}
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  vertical-align: top;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.section-header {
+  background: #d0e6f7;
+  padding: 12px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 15px;
+  color: #003049;
+  margin-bottom: 16px;
+}
+button {
+  background-color: #0077b6;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  margin: 20px auto;
+  display: block;
+}
+button:hover {
+  background-color: #023e8a;
+}
+#mensaje_guardado {
+  margin-top: 15px;
+  font-weight: bold;
+  text-align: center;
+}
+.inmovilizado-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 0;
+}
+.inmovilizado-box select {
+  margin: 0;
+  vertical-align: top;
+}
+#loginButton {
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+#resultadoBusqueda {
+  margin-left: 10px;
+  font-weight: bold;
+  color: #003049;
+  font-size: 14px;
+}
+#errorMessage {
+  color: #b00020;
+  text-align: center;
+  margin-top: 10px;
+  display: none;
+}

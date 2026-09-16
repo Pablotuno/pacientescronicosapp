@@ -1,0 +1,134 @@
+/* CHECKBOXES DE PATOLOGÍAS MEJORADOS Y BONITOS */
+.patologias-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px 20px;
+  margin-top: 15px;
+  padding: 10px;
+}
+
+.patologia-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 15px;
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e1e8f0);
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  font-size: 13px;
+  position: relative;
+  overflow: hidden;
+}
+
+.patologia-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--color-primary, #0077b6);
+  transform: scaleY(0);
+  transition: transform 0.15s ease;
+}
+
+.patologia-item:hover {
+  background: var(--color-primary-light, #eaf4fb);
+  border-color: var(--color-primary, #0077b6);
+}
+
+.patologia-item:hover::before {
+  transform: scaleY(1);
+}
+
+.patologia-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: var(--color-primary, #0077b6);
+}
+
+.patologia-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.patologia-nombre {
+  font-weight: 600;
+  color: #2c3e50;
+  line-height: 1.2;
+}
+
+.patologia-codigo {
+  font-size: 11px;
+  color: #6c757d;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Estado seleccionado */
+.patologia-item:has(input:checked) {
+  background: var(--color-primary-light, #e6f3ff);
+  border-color: var(--color-primary, #0077b6);
+}
+
+.patologia-item:has(input:checked)::before {
+  transform: scaleY(1);
+}
+
+.patologia-item:has(input:checked) .patologia-nombre {
+  color: var(--color-primary, #0077b6);
+  font-weight: 700;
+}
+
+.patologia-item:has(input:checked) .patologia-codigo {
+  color: var(--color-primary, #0077b6);
+  font-weight: 500;
+}
+
+/* Resto del CSS existente... */
+.form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.form-group textarea::placeholder, 
+.form-group input::placeholder {
+  font-style: italic;
+  color: #888;
+}
+
+.aviso-header {
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #003049;
+}
+
+/* ESTILOS PARA ENLACES EN TOOLTIP DE VACUNAS */
+.tooltip-content {
+  width: 500px; /* Aumentado para escritorio */
+  font-size: 13px;
+  padding: 12px 15px;
+}
+
+.tooltip-content a {
+  color: #0077b6;
+  text-decoration: underline;
+  font-weight: 500;
+  margin-left: 5px;
+  transition: color 0.2s ease;
+}
+
+.tooltip-content a:hover {
+  color: #023e8a;
+  text-decoration: none;
+  background-color: #e8f0fe;
+  padding: 2px 4px;
+  border-radius: 3px;
+}

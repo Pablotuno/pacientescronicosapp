@@ -1,0 +1,352 @@
+/* ESTILOS PARA OTRAS PATOLOGÍAS ESPECÍFICAS */
+
+/* CAMPOS INLINE PARA PATOLOGÍAS */
+.patologia-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 1 calc(50% - 6px);
+  min-width: 200px;
+}
+
+.patologia-inline label {
+  flex: 0 0 auto;
+  width: 120px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.patologia-inline input[type="text"],
+.patologia-inline input[type="number"],
+.patologia-inline select {
+  flex: 0 0 100px;
+  padding: 5px 8px;
+  font-size: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  text-align: center;
+  background-color: white;
+}
+
+.patologia-inline input[readonly] {
+  background-color: #f8f9fa;
+  color: #666;
+}
+
+.patologia-inline select {
+  text-align: left;
+  flex: 0 0 110px;
+}
+
+/* CAMPOS MÁS PEQUEÑOS PARA ESPIROMETRÍA Y VALORES CON UNIDADES */
+.patologia-expanded .patologia-inline input[type="number"],
+.analitica-grupo .patologia-inline input[type="number"] {
+  flex: 0 0 70px; /* Reducido de 100px a 70px */
+}
+
+/* CAMPOS ESPECÍFICOS MÁS PEQUEÑOS PARA SAT O2, PEAK FLOW, EXACERBACIONES */
+input[name="sato2"],
+input[name="peak_flow"],
+input[name="exacerbaciones_ultimo_ano"],
+input[name="espirometria_fev1"],
+input[name="espirometria_fvc"],
+input[name="espirometria_fev1_fvc"] {
+  flex: 0 0 60px !important; /* Aún más pequeños para campos con unidades */
+  min-width: 60px !important;
+}
+
+/* NORMAL RANGES PARA VALORES DE REFERENCIA - MÁS COMPACTOS */
+.patologia-inline .normal-range {
+  font-size: 9px; /* Reducido de 10px a 9px */
+  color: #555;
+  background: #f1f3f5;
+  padding: 1px 3px; /* Reducido padding */
+  border-radius: 3px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  margin-left: 5px; /* Reducido de 8px a 5px */
+}
+
+/* BOTÓN TOGGLE PARA DESPLEGABLES - ESTILO CONSISTENTE CON SECTION-HEADER */
+.patologia-toggle-btn {
+  width: 100%;
+  /* Usar el mismo fondo y colores que .section-header */
+  background: #d0e6f7;
+  color: #003049;
+  /* Sin borde para que coincida con .section-header */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  /* Mismo tamaño de fuente y peso que .section-header */
+  font-size: 15px;
+  font-weight: bold;
+  /* Mismo padding que .section-header pero ajustado para el flex layout */
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  /* Mismo margin que .section-header */
+  margin-bottom: 16px;
+}
+
+.patologia-toggle-btn:hover {
+  /* Hover más sutil que mantenga la coherencia */
+  background: #c5dff4;
+}
+
+.patologia-toggle-btn.active {
+  /* Estado activo ligeramente más oscuro pero manteniendo la paleta */
+  background: #b8d4f0;
+  color: #003049;
+}
+
+/* Asegurar que el texto del header tenga el mismo estilo */
+.patologia-toggle-btn .section-header {
+  background: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  font-weight: bold;
+  font-size: 15px;
+  color: #003049;
+}
+
+/* El indicador de flecha (▲/▼) */
+.patologia-toggle-btn > span:last-child {
+  font-size: 14px;
+  font-weight: bold;
+  color: #003049;
+  margin-left: 10px;
+}
+
+/* CONTENIDO EXPANDIDO */
+.patologia-expanded {
+  background: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 8px;
+}
+
+/* TEXTAREA GRANDE PARA OBSERVACIONES */
+.patologia-textarea-full {
+  width: 100% !important;
+  min-height: 70px !important;
+  padding: 8px 10px !important;
+  font-size: 12px !important;
+  border: 1px solid #ced4da !important;
+  border-radius: 4px !important;
+  resize: vertical !important;
+  margin-top: 6px !important;
+}
+
+/* COLORES DE INPUTS SEGÚN VALORES CLÍNICOS */
+.patologia-inline input.green {
+  background-color: #e6ffed;
+  border-color: #38b000;
+}
+
+.patologia-inline input.yellow {
+  background-color: #fffbe6;
+  border-color: #ffaa00;
+}
+
+.patologia-inline input.red {
+  background-color: #ffe6e6;
+  border-color: #b00020;
+}
+
+/* RECORDATORIOS ESPECÍFICOS PARA PATOLOGÍAS */
+.recordatorio {
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.recordatorio-vencido {
+  background-color: #ffe6e6;
+  border: 1px solid #ff4444;
+  color: #cc0000;
+}
+
+.recordatorio-proximo {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+}
+
+.recordatorio-pendiente {
+  background-color: #d1ecf1;
+  border: 1px solid #17a2b8;
+  color: #0c5460;
+}
+
+/* RESPONSIVE PARA CAMPOS INLINE */
+@media (max-width: 1024px) {
+  .patologia-inline {
+    flex: 1 1 100%;
+    min-width: auto;
+    gap: 6px;
+  }
+  
+  .patologia-inline label {
+    width: 90px;
+    font-size: 10px;
+  }
+  
+  .patologia-inline input[type="number"],
+  .patologia-inline input[type="text"],
+  .patologia-inline select {
+    flex: 1 1 auto;
+    min-width: 50px;
+  }
+  
+  /* Mantener campos pequeños en responsive */
+  input[name="sato2"],
+  input[name="peak_flow"],
+  input[name="exacerbaciones_ultimo_ano"],
+  input[name="espirometria_fev1"],
+  input[name="espirometria_fvc"],
+  input[name="espirometria_fev1_fvc"] {
+    flex: 0 0 55px !important;
+    min-width: 55px !important;
+  }
+  
+  .patologia-inline .normal-range {
+    font-size: 8px;
+    padding: 1px 2px;
+    margin-left: 3px;
+  }
+}
+
+@media (max-width: 768px) {
+  .patologia-inline {
+    gap: 4px;
+  }
+  
+  .patologia-inline label {
+    width: 80px;
+    font-size: 9px;
+  }
+  
+  /* Campos aún más pequeños en móviles */
+  input[name="sato2"],
+  input[name="peak_flow"],
+  input[name="exacerbaciones_ultimo_ano"],
+  input[name="espirometria_fev1"],
+  input[name="espirometria_fvc"],
+  input[name="espirometria_fev1_fvc"] {
+    flex: 0 0 50px !important;
+    min-width: 50px !important;
+  }
+}
+
+/* ===== ESTILOS ESPECÍFICOS PARA ICC ===== */
+
+/* Hint text en labels */
+.field-hint {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 11px;
+  color: #666;
+  margin-left: 6px;
+}
+
+/* Grupo de checkbox para ICC */
+.icc-checkbox-group {
+  justify-content: flex-start;
+  margin-top: 8px;
+}
+
+/* Label del checkbox ICC */
+.icc-checkbox-label {
+  display: flex !important;
+  align-items: center;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #0077b6 !important;
+  cursor: pointer;
+  padding: 8px 12px;
+  background: #f0f7ff;
+  border: 1px solid #d0e7ff;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  width: auto;
+  min-width: auto;
+  white-space: nowrap;
+}
+
+.icc-checkbox-label:hover {
+  background: #e1f0ff;
+  border-color: #0077b6;
+}
+
+/* Checkbox específico ICC */
+.icc-checkbox {
+  width: 18px !important;
+  height: 18px !important;
+  margin-right: 8px !important;
+  margin-left: 0 !important;
+  cursor: pointer;
+  accent-color: #0077b6;
+  flex: 0 0 auto !important;
+}
+
+/* Contenido informativo ICC */
+.icc-info-content {
+  margin-top: 12px;
+  background: #ffffff !important;
+  border: 1px solid #e0e6ed !important;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+/* Título de la información ICC */
+.icc-info-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #003049;
+  font-size: 13px;
+}
+
+/* Lista de elementos informativos ICC */
+.icc-info-list {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.icc-info-list > div {
+  margin-bottom: 4px;
+  padding-left: 0;
+}
+
+/* RESPONSIVE para ICC */
+@media (max-width: 768px) {
+  .icc-checkbox-label {
+    font-size: 12px !important;
+    padding: 6px 10px;
+  }
+  
+  .icc-checkbox {
+    width: 16px !important;
+    height: 16px !important;
+    margin-right: 6px !important;
+  }
+  
+  .icc-info-title {
+    font-size: 12px;
+  }
+  
+  .icc-info-list {
+    font-size: 12px;
+  }
+  
+  .field-hint {
+    font-size: 10px;
+  }
+}

@@ -1,0 +1,679 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #eef2f7;
+  margin: 0;
+  padding: 0;
+}
+
+/* PESTAÑAS PRINCIPALES MEJORADAS (Información, Anamnesis, Exploración, Plan) */
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+  padding: 4px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tab {
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+  flex: 1;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tab::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #0077b6, #023e8a);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.tab:hover {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border-color: #0077b6;
+  color: #003049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 119, 182, 0.2);
+}
+
+.tab.active {
+  background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%);
+  border-color: #003049;
+  color: white;
+  font-weight: 600;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 119, 182, 0.3);
+}
+
+.tab.active::before {
+  transform: scaleX(1);
+}
+
+.tab:last-child {
+  border-right: none;
+}
+
+/* CONTAINER AJUSTADO */
+.container {
+  max-width: 705px;
+  width: 98%;
+  margin: 0 auto;
+  padding: 16px;
+  background-color: white;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* RESPONSIVE: Container más estrecho en móviles */
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+    padding: 12px;
+  }
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+.bloque {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 14px 11px;
+  margin-bottom: 25px;
+  border-left: 5px solid #ced4da;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* FORM GROUPS UNIFICADOS Y MEJORADOS */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.form-group {
+  flex: 1 1 48%;
+  min-width: 220px;
+  position: relative;
+  margin-top: 10px;
+}
+
+/* RESPONSIVE: Form groups en móviles */
+@media (max-width: 768px) {
+  .form-group {
+    flex: 1 1 100%;
+    min-width: auto;
+  }
+  
+  .form-group.inline {
+    flex: 1 1 100%;
+    min-width: auto;
+  }
+}
+
+.form-group label {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1;
+  padding: 2px 0;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  vertical-align: top;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+  background: #d0e6f7;
+  padding: 12px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 15px;
+  color: #003049;
+  margin-bottom: 16px;
+}
+
+/* INFO BOXES CONSOLIDADOS */
+.info-box {
+  font-size: 13px;
+  background: #e8f0fe;
+  padding: 10px 12px;
+  border-radius: 6px;
+  line-height: 1.5;
+  color: #333;
+  font-style: italic;
+  border: 1px solid #d0d7de;
+  margin-bottom: 12px;
+  margin-top: 8px;
+  text-align: left;
+}
+
+.info-box.red {
+  background: #ffe6e6;
+  border-color: #b00020;
+}
+
+.info-box.score2 {
+  background: #e6f4fa;
+  border: 2px solid #0077b6;
+  padding: 12px;
+  text-align: left;
+  font-style: normal;
+}
+
+.info-box.score2 .score-title,
+.info-box.score2 .consejos-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.info-box[data-type="cervix"]::before, 
+.info-box[data-type="colon"]::before, 
+.info-box[data-type="mama"]::before {
+  content: '';
+}
+
+.info-box[data-type="cervix"].green::before, 
+.info-box[data-type="colon"].green::before, 
+.info-box[data-type="mama"].green::before {
+  content: '🟢 ';
+  color: #38b000;
+}
+
+.info-box[data-type="cervix"].yellow::before, 
+.info-box[data-type="colon"].yellow::before, 
+.info-box[data-type="mama"].yellow::before {
+  content: '🟡 ';
+  color: #ffaa00;
+}
+
+.info-box[data-type="cervix"].red::before, 
+.info-box[data-type="colon"].red::before, 
+.info-box[data-type="mama"].red::before {
+  content: '🔴 ';
+  color: #b00020;
+}
+
+.info-box[data-type="cervix"].info::before, 
+.info-box[data-type="colon"].info::before, 
+.info-box[data-type="mama"].info::before {
+  content: 'ℹ️ ';
+  color: #0077b6;
+}
+
+/* TOOLTIPS CONSOLIDADOS */
+.tooltip-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin-top: 12px;
+}
+
+.tooltip-container.wide {
+  width: auto;
+}
+
+.tooltip-trigger {
+  cursor: pointer;
+  font-weight: 600;
+  color: #0077b6;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  height: 20px;
+}
+
+.tooltip-content {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  background: #e8f0fe;
+  padding: 12px 15px;
+  border-radius: 6px;
+  border: 1px solid #d0d7de;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #333;
+  z-index: 1000;
+  width: 450px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 8px;
+  font-style: normal;
+  white-space: normal;
+  max-width: none;
+}
+
+.tooltip-container:hover .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* RESPONSIVE: Tooltips en móviles */
+@media (max-width: 768px) {
+  .tooltip-content {
+    width: 280px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+button {
+  background-color: #0077b6;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  margin: 20px auto;
+  display: block;
+}
+
+button:hover {
+  background-color: #023e8a;
+}
+
+.logout-button {
+  background-color: #6c757d;
+  margin-top: 10px;
+}
+
+.logout-button:hover {
+  background-color: #5a6268;
+}
+
+#mensaje_guardado {
+  margin-top: 15px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.inmovilizado-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 0;
+}
+
+.inmovilizado-box select {
+  margin: 0;
+  vertical-align: top;
+}
+
+#loginButton {
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#resultadoBusqueda {
+  margin-left: 10px;
+  font-weight: bold;
+  color: #003049;
+  font-size: 14px;
+}
+
+#errorMessage {
+  color: #b00020;
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+/* PANTALLA DE LOGIN CENTRADA */
+#loginForm {
+  max-width: 380px;
+  margin: 60px auto;
+  padding: 32px 28px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#loginForm h3 {
+  text-align: center;
+  color: #003049;
+  margin-top: 0;
+  margin-bottom: 22px;
+}
+
+#loginEmailForm {
+  display: flex;
+  flex-direction: column;
+}
+
+#loginEmailForm .form-group {
+  margin-top: 14px;
+}
+
+#loginEmailForm .save-button {
+  width: 100%;
+  margin-top: 22px !important;
+}
+
+.error {
+  color: #b00020;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
+/* PESTAÑAS SECUNDARIAS */
+.secondary-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.secondary-tab {
+  padding: 8px 15px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12.5px;
+  color: #333;
+  flex: 1;
+  text-align: center;
+  min-width: 100px;
+  transition: all 0.2s ease;
+}
+
+.bloque:has(.secondary-tabs) {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.bloque:has(.section-header:contains("Diabetes")) .form-row:has(input[name="ecg_fecha"]),
+.bloque:has(button.nuevo-ecg-btn) .form-row {
+  margin-bottom: 4px;
+}
+
+.bloque:has(.section-header:contains("Diabetes")) .form-row:has(input[name="ecg_fecha"]) + .form-row,
+.bloque:has(button.nuevo-ecg-btn) .form-row + .form-row {
+  margin-top: 0px;
+}
+
+.bloque:has(.section-header:contains("Diabetes")) .form-row .form-group:has(textarea#ecg_obs_dm) {
+  margin-top: 0px;
+  margin-bottom: 8px;
+}
+
+.bloque label[for="ecg_obs_dm"] {
+  margin-bottom: 4px;
+  margin-top: 0px;
+}
+
+.tooltip-container {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  height: auto;
+  line-height: 1;
+}
+
+.form-group.inline:has(.tooltip-container) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-group.inline input[type="checkbox"] {
+  margin: 0;
+  vertical-align: middle;
+}
+
+.analitica-grupo:has(.nuevo-ecg-btn) {
+  padding-bottom: 8px;
+}
+
+.analitica-grupo:has(.nuevo-ecg-btn) .section-subheader {
+  margin-bottom: 8px;
+}
+
+.diabetes-inline {
+  margin-bottom: 0;
+}
+
+div[style*="display: flex"][style*="align-items: center"] {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .secondary-tabs {
+    gap: 4px;
+  }
+  
+  .secondary-tab {
+    padding: 7px 12px;
+    font-size: 11px;
+    min-width: auto;
+    flex: 1;
+  }
+}
+
+.form-group .validating {
+  font-size: 12px;
+  color: #0077b6;
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+.delete-button {
+  background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%);
+  color: white;
+  border: 1px solid #dc3545;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+  margin-top: 10px;
+}
+
+.delete-button:hover {
+  background: linear-gradient(135deg, #a71d2a 0%, #7a1a20 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.delete-button:disabled {
+  background: #cccccc;
+  border: 1px solid #aaaaaa;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+/* ===== BOTONES PRINCIPALES (GUARDAR, ELIMINAR, CERRAR SESIÓN) ===== */
+
+/* Contenedor de botones principales */
+.button-group {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin: 25px 0 15px 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+/* Base común para todos los botones principales */
+.save-button,
+.delete-button,
+.logout-button {
+  /* Tamaño y espaciado uniforme */
+  padding: 12px 20px !important;
+  min-width: 160px;
+  height: 48px;
+  
+  /* Tipografía uniforme */
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  
+  /* Bordes y formas */
+  border: none !important;
+  border-radius: 8px !important;
+  
+  /* Comportamiento */
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  
+  /* Sombras base */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+  
+  /* Reset de margin del CSS general */
+  margin: 0 !important;
+}
+
+/* BOTÓN GUARDAR - Azul principal */
+.save-button {
+  background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%) !important;
+  color: white !important;
+  border: 2px solid #0077b6 !important;
+}
+
+.save-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #023e8a 0%, #001d3d 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 119, 182, 0.3) !important;
+}
+
+.save-button:active:not(:disabled) {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 6px rgba(0, 119, 182, 0.2) !important;
+}
+
+/* BOTÓN ELIMINAR - Rojo de advertencia */
+.delete-button {
+  background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%) !important;
+  color: white !important;
+  border: 2px solid #dc3545 !important;
+}
+
+.delete-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #a71d2a 0%, #7a1a20 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3) !important;
+}
+
+.delete-button:active:not(:disabled) {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.2) !important;
+}
+
+/* BOTÓN CERRAR SESIÓN - Gris neutro */
+.logout-button {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+  color: white !important;
+  border: 2px solid #6c757d !important;
+}
+
+.logout-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #495057 0%, #343a40 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3) !important;
+}
+
+.logout-button:active:not(:disabled) {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 6px rgba(108, 117, 125, 0.2) !important;
+}
+
+/* ESTADO DESHABILITADO UNIFORME */
+.save-button:disabled,
+.delete-button:disabled,
+.logout-button:disabled {
+  background: linear-gradient(135deg, #cccccc 0%, #999999 100%) !important;
+  color: #666666 !important;
+  border: 2px solid #cccccc !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  opacity: 0.7 !important;
+}
+
+/* RESPONSIVE PARA BOTONES PRINCIPALES */
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  
+  .save-button,
+  .delete-button,
+  .logout-button {
+    min-width: 100% !important;
+    max-width: 280px !important;
+    margin: 0 auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .save-button,
+  .delete-button,
+  .logout-button {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+    min-width: 100% !important;
+  }
+}
+
+/* ===== RESET PARA MANTENER OTROS BOTONES INTACTOS ===== */
+
+/* Asegurar que el button general no afecte a los botones principales */
+button:not(.save-button):not(.delete-button):not(.logout-button) {
+  margin: 20px auto;
+  display: block;
+}

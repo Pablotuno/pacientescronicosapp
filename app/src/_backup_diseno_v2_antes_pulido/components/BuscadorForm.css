@@ -1,0 +1,60 @@
+.buscador-patologias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-top: 6px;
+}
+
+.buscador-patologia-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+}
+
+.buscador-tabla-wrap {
+  overflow-x: auto;
+}
+
+.buscador-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.buscador-tabla th,
+.buscador-tabla td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid #e2e6ea;
+  white-space: nowrap;
+}
+
+.buscador-tabla th {
+  color: #003049;
+  font-weight: 600;
+  background: #eef2f7;
+}
+
+.buscador-tabla tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.buscador-patologias-celda {
+  white-space: normal;
+  min-width: 160px;
+}
+
+.buscador-chip {
+  display: inline-block;
+  background: #d0e6f7;
+  color: #003049;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin: 2px 4px 2px 0;
+}

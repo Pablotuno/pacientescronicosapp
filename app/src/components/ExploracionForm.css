@@ -1,0 +1,253 @@
+/* ESTILOS ESPECÍFICOS PARA EXPLORACIÓN */
+
+.section {
+  padding: 20px;
+}
+
+.section-subheader {
+  font-size: 13px;
+  font-weight: 600;
+  color: #003049;
+  margin-bottom: 6px;
+  margin-top: 6px;
+}
+
+/* GRUPOS ANALÍTICOS */
+.analitica-grupo {
+  border: 1px solid #d0d7de;
+  background: #f8f9fa;
+  border-radius: 5px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+/* CAMPOS INLINE MEJORADOS Y RESPONSIVE */
+.form-group.inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 1 calc(50% - 6px);
+  min-width: 260px;
+}
+
+/* LAYOUT ESPECIAL SOLO PARA ITB */
+.bloque .secondary-tabs ~ .tab-content[data-tab="itb"] .form-group.inline,
+.secondary-tab:last-child + .tab-content .form-group.inline {
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.bloque .secondary-tabs ~ .tab-content[data-tab="itb"] .form-group.inline label,
+.secondary-tab:last-child + .tab-content .form-group.inline label {
+  flex: 0 0 auto;
+  width: auto;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  margin-right: auto;
+}
+
+.bloque .secondary-tabs ~ .tab-content[data-tab="itb"] .form-group.inline input,
+.secondary-tab:last-child + .tab-content .form-group.inline input {
+  flex: 0 0 80px;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* RESTO DE FORM GROUPS (no en pruebas complementarias) */
+.form-group.inline label {
+  flex: 0 0 auto;
+  width: 110px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.form-group.inline input[type="number"],
+.form-group.inline input[type="text"] {
+  flex: 0 0 80px;
+  padding: 5px;
+  font-size: 12px;
+  border-radius: 4px;
+  text-align: center;
+  margin-left: 12px;
+}
+
+/* Quitar margin-left solo para ITB */
+.bloque .secondary-tabs ~ .tab-content[data-tab="itb"] .form-group.inline input[type="number"],
+.secondary-tab:last-child + .tab-content .form-group.inline input[type="number"],
+.bloque .secondary-tabs ~ .tab-content[data-tab="itb"] .form-group.inline input[type="text"],
+.secondary-tab:last-child + .tab-content .form-group.inline input[type="text"] {
+  margin-left: 0;
+}
+
+.form-group.inline input[type="checkbox"] {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.normal-range {
+  font-size: 10px;
+  color: #555;
+  background: #f1f3f5;
+  padding: 2px 4px;
+  border-radius: 3px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+/* RESPONSIVE: Campos inline en pantallas más pequeñas */
+@media (max-width: 1024px) {
+  .form-group.inline {
+    flex: 1 1 100%;
+    min-width: auto;
+    gap: 6px;
+  }
+  
+  .form-group.inline label {
+    width: 110px;
+    font-size: 11px;
+  }
+  
+  .form-group.inline input[type="number"],
+  .form-group.inline input[type="text"] {
+    flex: 1 1 auto;
+    min-width: 60px;
+  }
+  
+  .normal-range {
+    font-size: 9px;
+    padding: 1px 3px;
+  }
+}
+
+/* COLORES DE INPUTS */
+.form-group input.green {
+  background-color: #e6ffed;
+  border-color: #38b000;
+}
+
+.form-group input.yellow {
+  background-color: #fffbe6;
+  border-color: #ffaa00;
+}
+
+.form-group input.red {
+  background-color: #ffe6e6;
+  border-color: #b00020;
+}
+
+.form-group input.orange {
+  background-color: #ffe4cc;
+  border-color: #ff8c00;
+}
+
+/* BOTONES */
+.calculate-button {
+  background-color: var(--color-primary, #0077b6);
+  color: white;
+  border: 1px solid var(--color-primary, #0077b6);
+  padding: 9px 16px;
+  border-radius: var(--radius-sm, 6px);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.calculate-button:hover {
+  background-color: var(--color-primary-dark, #023e8a);
+}
+
+.calculate-button-secondary {
+  background-color: transparent;
+  color: var(--color-primary, #0077b6);
+}
+
+.calculate-button-secondary:hover {
+  background-color: var(--color-primary-light, #eaf4fb);
+  color: var(--color-primary-dark, #023e8a);
+}
+
+.nueva-analitica-btn {
+  font-weight: 600;
+}
+
+/* Fila de botones que comparten un form-group (ej. Nueva analítica / Pegar analítica) */
+.form-group-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.form-group-buttons .calculate-button {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+/* PESTAÑAS SECUNDARIAS (ECG, AMPA, ITB) */
+.secondary-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.secondary-tab {
+  padding: 10px 18px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #333;
+  flex: 1;
+  text-align: center;
+  min-width: 110px;
+  transition: all 0.2s ease;
+}
+
+.secondary-tab:hover {
+  background: #e8e8e8;
+}
+
+.secondary-tab.active {
+  background: #f5f7fa;
+  border-color: #0077b6;
+  font-weight: 500;
+  color: #0077b6;
+}
+
+.secondary-tab:last-child {
+  border-right: none;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* TÍTULOS DE INTERPRETACIÓN */
+.interpretacion-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #003049;
+}
+
+/* TOOLTIP STANDALONE PARA INFO AMPA - ALINEADO */
+.standalone-tooltip {
+  margin-top: 12px;
+  display: inline-block;
+  vertical-align: middle;
+}

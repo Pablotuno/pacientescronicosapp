@@ -1,0 +1,70 @@
+.agenda-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.agenda-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--color-border, #e2e6ec);
+  border-left: 3px solid var(--color-border, #ccc);
+  background: var(--color-surface, #fff);
+  flex-wrap: wrap;
+}
+
+.agenda-vencido { border-left-color: var(--color-danger, #d6304a); }
+.agenda-proximo7 { border-left-color: #d97706; }
+.agenda-proximo30 { border-left-color: var(--color-primary, #0077b6); }
+.agenda-futuro { border-left-color: var(--color-text-muted, #adb5bd); }
+.agenda-completado { border-left-color: var(--color-success, #2e9e4f); opacity: 0.85; }
+
+.agenda-item-info { flex: 1; min-width: 200px; }
+.agenda-item-paciente { font-weight: 600; color: var(--color-primary-dark, #003049); font-size: 13px; }
+.agenda-item-sip { font-weight: 400; color: var(--color-text-muted, #666); font-size: 12px; }
+.agenda-item-motivo { font-size: 12px; color: var(--color-text, #333); margin-top: 2px; }
+
+.agenda-item-acciones { display: flex; align-items: center; gap: 6px; }
+
+.agenda-fecha-input {
+  padding: 5px 7px;
+  font-size: 12px;
+  border: 1px solid var(--color-border, #ced4da);
+  border-radius: var(--radius-sm, 4px);
+  background: var(--color-surface, #fff);
+}
+
+.agenda-btn {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #ced4da);
+  border-radius: var(--radius-sm, 4px);
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.agenda-btn-ok:hover { background: #eaf7ed; border-color: var(--color-success, #2e9e4f); }
+.agenda-btn-descartar:hover { background: #fdf3e3; border-color: #d97706; }
+.agenda-btn-eliminar:hover { background: #fbeaec; border-color: var(--color-danger, #dc3545); }
+
+.agenda-form-manual {
+  margin-top: 12px;
+  padding: 14px;
+  background: var(--color-bg, #f8f9fa);
+  border: 1px solid var(--color-border, #ced4da);
+  border-radius: var(--radius-md, 8px);
+}
+
+@media (max-width: 768px) {
+  .agenda-item { flex-direction: column; align-items: flex-start; }
+  .agenda-item-acciones { width: 100%; justify-content: space-between; }
+}

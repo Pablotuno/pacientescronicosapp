@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Control de Pacientes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="tabs">
+    <div class="tab active">🧾 Información</div>
+    <div class="tab">📋 Anamnesis</div>
+    <div class="tab">🩺 Exploración</div>
+    <div class="tab">📝 Plan</div>
+  </div>
+
+  <div class="container">
+    <div id="loginForm" style="display: block;">
+      <h3>Iniciar sesión</h3>
+      <form id="loginEmailForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Iniciar sesión</button>
+      </form>
+      <div id="errorMessage"></div>
+    </div>
+    <form id="formPaciente" style="display: none;">
+      <div class="section active">
+        <div class="bloque">
+          <div class="section-header">🧾 Información básica del paciente</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="sip">SIP <span id="resultadoBusqueda"></span></label>
+              <input type="text" id="sip" name="sip" required onblur="window.validarSIP()">
+            </div>
+            <div class="form-group">
+              <label for="fecha_nacimiento">Fecha nacimiento</label>
+              <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" onchange="window.calcularEdad()">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nombre">Nombre</label>
+              <input type="text" id="nombre" name="nombre">
+            </div>
+            <div class="form-group">
+              <label for="apellidos">Apellidos</label>
+              <input type="text" id="apellidos" name="apellidos">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edad">Edad</label>
+              <input type="number" id="edad" name="edad" readonly>
+            </div>
+            <div class="form-group">
+              <label for="sexo">Sexo</label>
+              <select id="sexo" name="sexo">
+                <option value="">-- Seleccione una opción --</option>
+                <option value="Hombre">Hombre</option>
+                <option value="Mujer">Mujer</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="bloque">
+          <div class="section-header">📋 Información asistencial</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fecha_consulta">Fecha de consulta</label>
+              <input type="date" id="fecha_consulta" name="fecha_consulta">
+            </div>
+            <div class="form-group">
+              <label for="facultativo">Facultativo responsable</label>
+              <input type="text" id="facultativo" name="facultativo">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cupo">Cupo</label>
+              <select id="cupo" name="cupo">
+                <option value="">-- Seleccione una opción --</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="Temporal">Temporal</option>
+                <option value="Otro">Otro (especificar)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="cupo_otro">Especificar otro cupo</label>
+              <input type="text" id="cupo_otro" name="cupo_otro">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nivel_cronicidad">Nivel de cronicidad</label>
+              <select id="nivel_cronicidad" name="nivel_cronicidad">
+                <option value="">-- Seleccione una opción --</option>
+                <option value="Nivel 1">Nivel 1</option>
+                <option value="Nivel 2">Nivel 2</option>
+                <option value="Nivel 3">Nivel 3</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="paciente_inmovilizado">Paciente Inmovilizado 🛏️</label>
+              <div class="inmovilizado-box">
+                <select id="paciente_inmovilizado" name="paciente_inmovilizado">
+                  <option value="" selected disabled>-- Seleccione una opción --</option>
+                  <option value="true">Sí</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="submit">💾 Guardar</button>
+      <div id="mensaje_guardado"></div>
+    </form>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+    import { validarSIP, calcularEdad, guardarPaciente } from '/paciente.js';
+
+    const supabaseUrl = 'https://fbcmydqzcuthgcmyispu.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZiY215ZHF6Y3V0aGdjbXlpc3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNTAyNzIsImV4cCI6MjA2NzkyNjI3Mn0.8hxyYtNfeNtaBIa6b18ZZXOc4EpjGBTExSXFGvVLr18';
+    window.supabase = createClient(supabaseUrl, supabaseKey);  // Client global
+
+    window.validarSIP = validarSIP;
+    window.calcularEdad = calcularEdad;
+
+    document.getElementById('loginEmailForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { error } = await window.supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+      if (error) {
+        document.getElementById('errorMessage').textContent = '❌ Error en login: ' + error.message;
+        document.getElementById('errorMessage').style.display = 'block';
+      }
+    });
+
+    document.getElementById('formPaciente').addEventListener('submit', async (event) => {
+      await guardarPaciente(event);
+    });
+
+    window.supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        document.getElementById('formPaciente').style.display = 'block';
+        document.getElementById('loginForm').style.display = 'none';
+      } else {
+        document.getElementById('formPaciente').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

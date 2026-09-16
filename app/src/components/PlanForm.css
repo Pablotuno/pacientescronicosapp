@@ -1,0 +1,181 @@
+/* ESTILOS PARA PLAN FORM - INTEGRADOS CON EL RESTO DE LA APLICACIÓN */
+
+/* ESTADO DE PATOLOGÍAS */
+.patologia-estado-card {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e1e8f0);
+  border-radius: var(--radius-md, 8px);
+  padding: 12px;
+  text-align: center;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.patologia-estado-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--color-primary, #0077b6);
+  transform: scaleY(0);
+  transition: transform 0.15s ease;
+}
+
+.patologia-estado-card:hover {
+  border-color: var(--color-primary, #0077b6);
+  box-shadow: var(--shadow-sm, 0 2px 6px rgba(0,0,0,0.08));
+}
+
+.patologia-estado-card:hover::before {
+  transform: scaleY(1);
+}
+
+.patologia-nombre {
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.patologia-control {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.patologia-control.estado-bueno {
+  background-color: #e6ffed;
+  color: #2d5a2d;
+  border: 1px solid #38b000;
+}
+
+.patologia-control.estado-regular {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffc107;
+}
+
+.patologia-control.estado-malo {
+  background-color: #ffe6e6;
+  color: #cc0000;
+  border: 1px solid #dc3545;
+}
+
+.patologia-proxima {
+  font-size: 11px;
+  color: #666;
+  font-style: italic;
+}
+
+/* ACCIONES REALIZADAS */
+.accion-realizada {
+  margin-bottom: 6px;
+  color: #333;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* CITAS PROGRAMADAS */
+.cita-programada {
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
+  color: #333;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.cita-programada:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.cita-programada.urgente {
+  background-color: #fff5f5;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ffe6e6;
+  border-left: 4px solid #dc3545;
+}
+
+.urgente-tag {
+  background-color: #dc3545;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+/* TEXTAREA DEL PLAN */
+textarea[name="plan_actuacion_textarea"] {
+  width: 100% !important;
+  min-height: 400px !important;
+  padding: 12px !important;
+  border: 1px solid #ccc !important;
+  border-radius: 6px !important;
+  resize: vertical !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  transition: border-color 0.3s ease !important;
+}
+
+textarea[name="plan_actuacion_textarea"]:focus {
+  border-color: #0077b6 !important;
+  box-shadow: 0 0 0 2px rgba(0, 119, 182, 0.1) !important;
+  background-color: white !important;
+  outline: none !important;
+}
+
+textarea[name="plan_actuacion_textarea"]::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+/* RESPONSIVE PARA PLAN */
+@media (max-width: 768px) {
+  .patologia-estado-card {
+    margin-bottom: 10px;
+  }
+  
+  .patologia-nombre {
+    font-size: 12px;
+  }
+  
+  .patologia-control {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .patologia-proxima {
+    font-size: 10px;
+  }
+  
+  .accion-realizada,
+  .cita-programada {
+    font-size: 12px;
+  }
+  
+  textarea[name="plan_actuacion_textarea"] {
+    min-height: 300px !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .patologia-estado-card {
+    padding: 10px;
+  }
+  
+  textarea[name="plan_actuacion_textarea"] {
+    min-height: 250px !important;
+    padding: 10px !important;
+  }
+}
