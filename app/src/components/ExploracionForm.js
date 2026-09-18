@@ -34,7 +34,21 @@ const ExploracionForm = ({ formData, setFormData, handleInputChange, calcularRec
     { etiqueta: 'Potasio', patrones: ['POTASIO'], unidad: 'mEq/L', esAnormal: (v) => v < 3.5 || v > 5.1 },
     { etiqueta: 'TSH', patrones: ['TSH'], unidad: 'mUI/L', esAnormal: (v) => v < 0.4 || v > 4.0 },
     { etiqueta: 'Hemoglobina', patrones: ['HEMOGLOBINA', 'HB'], unidad: 'g/dL', esAnormal: (v) => v < 12, exacto: true },
-    { etiqueta: 'PSA', patrones: ['PSA'], unidad: 'ng/mL', esAnormal: (v) => v >= 4.0, soloHombre: true }
+    { etiqueta: 'PSA', patrones: ['PSA'], unidad: 'ng/mL', esAnormal: (v) => v >= 4.0, soloHombre: true },
+    {
+      etiqueta: 'NT-proBNP',
+      patrones: ['NT PROBNP', 'PROBNP'],
+      unidad: 'pg/mL',
+      // Punto de corte para insuficiencia cardiaca improbable: <75 años 125 pg/mL, >=75 años 250 pg/mL
+      esAnormal: (v, fd) => {
+        const edad = parseFloat(fd && fd.edad);
+        const umbral = !isNaN(edad) && edad >= 75 ? 250 : 125;
+        return v > umbral;
+      },
+      detalle: (v) => (v > 2000 ? ', valor crítico' : '')
+    },
+    { etiqueta: 'Plaquetas', patrones: ['PLAQUETAS'], unidad: 'x10³/µL', esAnormal: (v) => v < 150 || v > 400 },
+    { etiqueta: 'Hierro', patrones: ['HIERRO'], unidad: 'µg/dL', esAnormal: (v) => v < 59 || v > 158 }
   ];
 
   // Busca el valor numérico de un parámetro en informes de laboratorio donde el nombre va en su
@@ -51,8 +65,9 @@ const ExploracionForm = ({ formData, setFormData, handleInputChange, calcularRec
       for (let j = i + 1; j < Math.min(i + 4, lineasNorm.length); j++) {
         const candidata = (lineasOriginales[j] || '').trim();
         if (!candidata) continue;
-        const match = candidata.match(/^(\d+[.,]\d+|\d+)/);
-        if (match) return match[1].replace(',', '.');
+        // Formato español: el punto agrupa miles ("2.133" = 2133) y la coma es el separador decimal
+        const match = candidata.match(/^(\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+(?:,\d+)?)/);
+        if (match) return match[1].replace(/\./g, '').replace(',', '.');
         break;
       }
     }
@@ -92,13 +107,14 @@ const ExploracionForm = ({ formData, setFormData, handleInputChange, calcularRec
     }
 
     const lineasAlerta = [];
-    VALORES_ALERTA_OTROS.forEach(({ etiqueta, patrones, unidad, esAnormal, soloHombre, exacto }) => {
+    VALORES_ALERTA_OTROS.forEach(({ etiqueta, patrones, unidad, esAnormal, soloHombre, exacto, detalle }) => {
       if (soloHombre && formData.sexo !== 'Hombre') return;
       const valorTexto = buscarValorEnLineas(lineasNormalizadas, lineasOriginales, patrones, !!exacto);
       if (valorTexto === null) return;
       const valor = parseFloat(valorTexto);
-      if (esAnormal(valor)) {
-        const linea = `${etiqueta} ${valor} ${unidad} (alterado)`;
+      if (esAnormal(valor, formData)) {
+        const extra = detalle ? detalle(valor) : '';
+        const linea = `${etiqueta} ${valor} ${unidad} (alterado${extra})`;
         if (!(formData.otros || '').includes(linea)) {
           lineasAlerta.push(linea);
         }
@@ -831,7 +847,7 @@ const ExploracionForm = ({ formData, setFormData, handleInputChange, calcularRec
               <div className="info-box" style={{ marginTop: '8px' }}>
                 <strong>Detectado:</strong> {camposDetectados.join(' · ')}
                 <div style={{ marginTop: '4px', fontSize: '12px' }}>
-                  Revisa los valores rellenados antes de guardar. Los parámetros marcados con ⚠️ (Potasio, TSH, Hemoglobina, PSA) están fuera de rango y se han añadido también a "Otros resultados".
+                  Revisa los valores rellenados antes de guardar. Los parámetros marcados con ⚠️ (Potasio, TSH, Hemoglobina, PSA, NT-proBNP, Plaquetas, Hierro) están fuera de rango y se han añadido también a "Otros resultados".
                 </div>
               </div>
             )}
