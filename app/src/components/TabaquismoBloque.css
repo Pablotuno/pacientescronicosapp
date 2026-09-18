@@ -9,18 +9,26 @@
   margin: 20px 0 10px;
 }
 
-/* Pastillas de estadio (mismo lenguaje visual que .patologia-item) */
+/* Pastillas de estadio (mismo lenguaje visual que .patologia-item)
+   Son siempre 5 estadios fijos: se fuerzan 5 columnas iguales en vez de auto-fit,
+   que en el ancho real de .container (705px) dejaba la 5ª tarjeta sola y estirada
+   a todo el ancho en su propia fila. */
 .tb-estadios {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
   margin-top: 6px;
+}
+@media (max-width: 560px) {
+  .tb-estadios {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 .tb-estadio {
   position: relative;
   overflow: hidden;
   text-align: left;
-  padding: 12px 14px;
+  padding: 10px 8px 10px 12px;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafe 100%);
   border: 2px solid #e1e8f0;
   border-radius: 8px;
@@ -45,8 +53,8 @@
   box-shadow: 0 4px 12px rgba(0, 119, 182, 0.15);
 }
 .tb-estadio:hover::before { transform: scaleY(1); }
-.tb-estadio-nombre { display: block; font-weight: 600; color: #2c3e50; font-size: 14px; }
-.tb-estadio-desc { display: block; font-size: 11px; color: #6c757d; font-style: italic; margin-top: 2px; }
+.tb-estadio-nombre { display: block; font-weight: 600; color: #2c3e50; font-size: 12.5px; line-height: 1.25; }
+.tb-estadio-desc { display: block; font-size: 10px; color: #6c757d; font-style: italic; margin-top: 3px; line-height: 1.25; }
 .tb-estadio.active {
   background: linear-gradient(135deg, #e6f3ff 0%, #cce7ff 100%);
   border-color: #0077b6;
