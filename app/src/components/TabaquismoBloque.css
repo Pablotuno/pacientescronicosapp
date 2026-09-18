@@ -25,6 +25,9 @@
   }
 }
 .tb-estadio {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
   position: relative;
   overflow: hidden;
   text-align: left;
@@ -83,7 +86,24 @@
 .tb-fager-body { padding: 4px 14px 14px; }
 .tb-fager-q { margin-bottom: 12px; }
 .tb-fager-q label { font-weight: 500; color: #34495e; font-size: 13px; display: block; margin-bottom: 6px; }
-.tb-fager-q select { width: 100%; }
+/* Estos <select> no están dentro de .form-group, así que no heredaban el estilo de los
+   inputs del resto de la app (borde, padding, radio) y se veían con el aspecto por
+   defecto del navegador. Se replica aquí el mismo estilo. */
+.tb-fager-q select {
+  width: 100%;
+  padding: 9px 10px;
+  font-size: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-sizing: border-box;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+.tb-fager-q select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.15);
+}
 .tb-fager-result {
   display: flex;
   align-items: center;

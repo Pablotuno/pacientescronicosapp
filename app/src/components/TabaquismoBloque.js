@@ -218,7 +218,7 @@ const TabaquismoBloque = ({ formData, setFormData, handleInputChange }) => {
           </div>
 
           <div className="form-row" style={{ marginTop: '16px' }}>
-            <div className="form-group" style={{ maxWidth: '160px', flex: '0 0 auto' }}>
+            <div className="form-group" style={{ maxWidth: '160px', minWidth: '120px', flex: '0 0 auto' }}>
               <label htmlFor="cigarrillos_dia">Cigarrillos/día</label>
               <input
                 type="number"
@@ -229,7 +229,7 @@ const TabaquismoBloque = ({ formData, setFormData, handleInputChange }) => {
                 onChange={handleInputChange}
               />
             </div>
-            <div className="form-group" style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div className="form-group" style={{ flex: '0 0 auto', minWidth: 'auto', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <input
                 type="checkbox"
                 id="intento_ultimo_ano"
