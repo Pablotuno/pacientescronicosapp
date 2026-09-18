@@ -17,6 +17,9 @@ const INITIAL_FORM_DATA = {
   asma: false, icc: false, erc: false, obesidad: false, insomnio: null, otros_antecedentes: '',
   antecedentes_familiares: '', cumple_tratamiento: '', observaciones_tratamiento: '',
   vacunas_al_dia: '', observaciones_vacunas: '', fumador: '', observaciones_fumador: '',
+  consejo_antitabaco: false, estadio_cambio: '', cigarrillos_dia: '', intento_ultimo_ano: false,
+  fagerstrom_1: '', fagerstrom_2: '', fagerstrom_3: '', fagerstrom_4: '', fagerstrom_5: '', fagerstrom_6: '',
+  farmacoterapia_valorada: false, seguimiento_citado: false, fecha_dia_d: '',
   alimentacion: '', ejercicio_fisico: '', 
   escalas_fecha: '', barthel: '', pfeiffer: '', necpal: '', escalas_otros: '',
   solicita_retinografia: false, realiza_retinografia: false, solicita_ecg: false,
@@ -108,12 +111,13 @@ function App() {
       'itb_brazo', 'pas_tobillo_derecho', 'pas_tobillo_izquierdo',
       'sato2', 'peak_flow', 'espirometria_fev1', 'espirometria_fvc',
       'espirometria_fev1_fvc', 'exacerbaciones_ultimo_ano',
-      'objetivo_peso', 'porcentaje_grasa_corporal'
+      'objetivo_peso', 'porcentaje_grasa_corporal', 'cigarrillos_dia'
     ];
 
     const camposTextoNumericos = [
-      'itb_pie_izquierdo', 'itb_pie_derecho', 'morinsky_1', 
-      'morinsky_2', 'morinsky_3', 'morinsky_4'
+      'itb_pie_izquierdo', 'itb_pie_derecho', 'morinsky_1',
+      'morinsky_2', 'morinsky_3', 'morinsky_4',
+      'fagerstrom_1', 'fagerstrom_2', 'fagerstrom_3', 'fagerstrom_4', 'fagerstrom_5', 'fagerstrom_6'
     ];
 
     // Limpiar campos numéricos: convertir "" a null
@@ -137,7 +141,8 @@ function App() {
     const camposFecha = [
       'fecha_nacimiento', 'fecha_consulta', 'escalas_fecha', 'fecha_ultima_as',
       'ecg_fecha', 'ampa_fecha', 'itb_fecha', 'retinografia_fecha', 'pies_fecha',
-      'espirometria_fecha', 'fecha_inicio_programa', 'icc_proxima_cita', 'fecha_creacion'
+      'espirometria_fecha', 'fecha_inicio_programa', 'icc_proxima_cita', 'fecha_creacion',
+      'fecha_dia_d'
     ];
 
     camposFecha.forEach(campo => {
@@ -545,6 +550,22 @@ function App() {
     observaciones_vacunas: paciente.observaciones_vacunas || '',
     fumador: paciente.fumador || '',
     observaciones_fumador: paciente.observaciones_fumador || '',
+    consejo_antitabaco: paciente.consejo_antitabaco || false,
+    estadio_cambio: paciente.estadio_cambio || '',
+    cigarrillos_dia: paciente.cigarrillos_dia || '',
+    intento_ultimo_ano: paciente.intento_ultimo_ano || false,
+    fagerstrom_1: paciente.fagerstrom_1 || '',
+    fagerstrom_2: paciente.fagerstrom_2 || '',
+    fagerstrom_3: paciente.fagerstrom_3 || '',
+    fagerstrom_4: paciente.fagerstrom_4 || '',
+    fagerstrom_5: paciente.fagerstrom_5 || '',
+    fagerstrom_6: paciente.fagerstrom_6 || '',
+    farmacoterapia_valorada: paciente.farmacoterapia_valorada || false,
+    seguimiento_citado: paciente.seguimiento_citado || false,
+    fecha_dia_d: paciente.fecha_dia_d ?
+      new Date(paciente.fecha_dia_d).toLocaleDateString('es-ES', {
+        day: '2-digit', month: '2-digit', year: 'numeric'
+      }) : '',
     alimentacion: paciente.alimentacion || '',
     ejercicio_fisico: paciente.ejercicio_fisico || '',
     escalas_fecha: paciente.escalas_fecha ?
@@ -940,7 +961,8 @@ function App() {
         { campo: 'retinografia_fecha', nombre: 'fecha de retinografía' },
         { campo: 'pies_fecha', nombre: 'fecha de revisión de pies' },
         { campo: 'espirometria_fecha', nombre: 'fecha de espirometría' },
-        { campo: 'fecha_inicio_programa', nombre: 'fecha de inicio del programa de obesidad' }
+        { campo: 'fecha_inicio_programa', nombre: 'fecha de inicio del programa de obesidad' },
+        { campo: 'fecha_dia_d', nombre: 'fecha del día D (abandono del tabaco)' }
       ];
 
       for (const fechaInfo of fechasValidar) {
@@ -965,6 +987,7 @@ function App() {
         pies_fecha: formData.pies_fecha ? formatFechaForSupabase(formData.pies_fecha) : null,
         espirometria_fecha: formData.espirometria_fecha ? formatFechaForSupabase(formData.espirometria_fecha) : null,
         fecha_inicio_programa: formData.fecha_inicio_programa ? formatFechaForSupabase(formData.fecha_inicio_programa) : null,
+        fecha_dia_d: formData.fecha_dia_d ? formatFechaForSupabase(formData.fecha_dia_d) : null,
         cumple_tratamiento: formData.cumple_tratamiento === 'Sí' ? true : formData.cumple_tratamiento === 'No' ? false : null,
         vacunas_al_dia: formData.vacunas_al_dia === 'Sí' ? true : formData.vacunas_al_dia === 'No' ? false : null,
         dm: formData.dm === true ? true : false,
@@ -1015,7 +1038,8 @@ function App() {
         espirometria_fev1_fvc: parseNumericField(formData.espirometria_fev1_fvc),
         exacerbaciones_ultimo_ano: parseIntegerField(formData.exacerbaciones_ultimo_ano),
         objetivo_peso: parseNumericField(formData.objetivo_peso),
-        porcentaje_grasa_corporal: parseNumericField(formData.porcentaje_grasa_corporal)
+        porcentaje_grasa_corporal: parseNumericField(formData.porcentaje_grasa_corporal),
+        cigarrillos_dia: parseIntegerField(formData.cigarrillos_dia)
       };
       
       // Eliminar campos que no van a la DB
@@ -1077,8 +1101,9 @@ function App() {
          'glucemia', 'hba1c', 'creatinina', 'fg', 'microalbumina', 'col_total', 'hdl', 
          'ldl', 'no_hdl', 'ampa_pas', 'ampa_pad', 'itb_brazo', 'pas_tobillo_derecho', 
          'pas_tobillo_izquierdo', 'itb_pie_izquierdo', 'itb_pie_derecho', 'sato2', 
-         'peak_flow', 'espirometria_fev1', 'espirometria_fvc', 'espirometria_fev1_fvc', 
-         'exacerbaciones_ultimo_ano', 'objetivo_peso', 'porcentaje_grasa_corporal'].includes(name)) {
+         'peak_flow', 'espirometria_fev1', 'espirometria_fvc', 'espirometria_fev1_fvc',
+         'exacerbaciones_ultimo_ano', 'objetivo_peso', 'porcentaje_grasa_corporal',
+         'cigarrillos_dia'].includes(name)) {
       if (value && (isNaN(value) || value < 0 || (name === 'porcentaje_grasa_corporal' && value > 100))) {
         setErrorMessage(`⚠️ ${name} debe ser un número válido ${name === 'porcentaje_grasa_corporal' ? 'entre 0 y 100' : 'entre 0 y 500'}`);
         return;
@@ -1087,9 +1112,9 @@ function App() {
 
     // Formatear fechas
     if (name === 'fecha_nacimiento' || name === 'escalas_fecha' || name === 'fecha_ultima_as' ||
-        name === 'ecg_fecha' || name === 'ampa_fecha' || name === 'itb_fecha' || 
+        name === 'ecg_fecha' || name === 'ampa_fecha' || name === 'itb_fecha' ||
         name === 'retinografia_fecha' || name === 'pies_fecha' || name === 'espirometria_fecha' ||
-        name === 'fecha_inicio_programa') {
+        name === 'fecha_inicio_programa' || name === 'fecha_dia_d') {
       const formattedValue = formatFechaInput(value);
       setFormData({ ...formData, [name]: formattedValue });
       if (name === 'fecha_nacimiento') {

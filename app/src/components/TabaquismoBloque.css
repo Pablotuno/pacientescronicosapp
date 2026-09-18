@@ -1,0 +1,107 @@
+/* ===== TabaquismoBloque — clases nuevas =====
+   Reutiliza tus clases globales: .bloque, .section-header, .info-box (green/yellow/red/info),
+   .form-group, .form-row. Aquí solo van las clases nuevas, prefijadas con .tb- para no chocar. */
+
+.tb-subheader {
+  font-size: 14px;
+  font-weight: 700;
+  color: #003049;
+  margin: 20px 0 10px;
+}
+
+/* Pastillas de estadio (mismo lenguaje visual que .patologia-item) */
+.tb-estadios {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 6px;
+}
+.tb-estadio {
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafe 100%);
+  border: 2px solid #e1e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+.tb-estadio::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%);
+  transform: scaleY(0);
+  transition: transform 0.25s ease;
+}
+.tb-estadio:hover {
+  border-color: #0077b6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 119, 182, 0.15);
+}
+.tb-estadio:hover::before { transform: scaleY(1); }
+.tb-estadio-nombre { display: block; font-weight: 600; color: #2c3e50; font-size: 14px; }
+.tb-estadio-desc { display: block; font-size: 11px; color: #6c757d; font-style: italic; margin-top: 2px; }
+.tb-estadio.active {
+  background: linear-gradient(135deg, #e6f3ff 0%, #cce7ff 100%);
+  border-color: #0077b6;
+  box-shadow: 0 3px 10px rgba(0, 119, 182, 0.2);
+}
+.tb-estadio.active::before { transform: scaleY(1); }
+.tb-estadio.active .tb-estadio-nombre { color: #0077b6; font-weight: 700; }
+.tb-estadio.active .tb-estadio-desc { color: #0077b6; }
+
+/* Test de Fagerström */
+.tb-fager {
+  border: 1px solid #e1e8f0;
+  border-radius: 8px;
+  margin-top: 14px;
+  background: #fbfdff;
+}
+.tb-fager > summary {
+  cursor: pointer;
+  padding: 12px 14px;
+  font-weight: 600;
+  color: #0077b6;
+  font-size: 14px;
+  list-style: none;
+}
+.tb-fager > summary::-webkit-details-marker { display: none; }
+.tb-fager-body { padding: 4px 14px 14px; }
+.tb-fager-q { margin-bottom: 12px; }
+.tb-fager-q label { font-weight: 500; color: #34495e; font-size: 13px; display: block; margin-bottom: 6px; }
+.tb-fager-q select { width: 100%; }
+.tb-fager-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #eef4fb;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.tb-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 13px; font-weight: 700; }
+.tb-badge.green { background: #d4f0e9; color: #1d5c52; }
+.tb-badge.yellow { background: #ffeec2; color: #7a5b1e; }
+.tb-badge.red { background: #ffd6d3; color: #9b2c33; }
+
+/* Farmacoterapia */
+.tb-med-list { display: grid; gap: 10px; margin-top: 6px; }
+.tb-med { border: 1px solid #e1e8f0; border-radius: 8px; padding: 10px 14px; background: #fff; }
+.tb-med-nombre { font-weight: 700; color: #023e8a; font-size: 14px; }
+.tb-med-pauta { font-size: 13px; color: #5a6b7b; margin-top: 2px; }
+.tb-rol-nota {
+  font-size: 12px;
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 10px;
+  border-top: 1px dashed #dfe6ee;
+  padding-top: 10px;
+}

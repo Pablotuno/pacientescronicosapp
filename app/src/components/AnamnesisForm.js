@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import './AnamnesisForm.css';
+import TabaquismoBloque from './TabaquismoBloque';
 
 const AnamnesisForm = ({ formData, setFormData, handleInputChange, escalasFechaError, calcularRecordatorios }) => {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -528,52 +529,7 @@ const AnamnesisForm = ({ formData, setFormData, handleInputChange, escalasFechaE
         </div>
       </div>
 
-      <div className="bloque">
-        <div className="section-header">🚬 Tabaquismo</div>
-        <div className="form-group">
-          <label htmlFor="fumador">¿Fumador?</label>
-          <select
-            id="fumador"
-            name="fumador"
-            value={formData.fumador}
-            onChange={handleInputChange}
-          >
-            <option value="">-- Selecciona --</option>
-            <option value="Sí">Sí</option>
-            <option value="No">No</option>
-            <option value="Exfumador">Exfumador</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="observaciones_fumador">Observaciones Fumador</label>
-          <textarea
-            id="observaciones_fumador"
-            name="observaciones_fumador"
-            value={formData.observaciones_fumador}
-            onChange={handleInputChange}
-          ></textarea>
-        </div>
-        {formData.fumador === 'Sí' && (
-          <div className="form-row">
-            <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <input
-                type="checkbox"
-                id="consejo_antitabaco"
-                name="consejo_antitabaco"
-                checked={formData.consejo_antitabaco || false}
-                onChange={handleCheckboxChange}
-                style={{ width: '20px', height: '20px', cursor: 'pointer' }}
-              />
-              <label 
-                htmlFor="consejo_antitabaco" 
-                style={{ cursor: 'pointer', marginBottom: '0', fontWeight: '600', color: '#0077b6' }}
-              >
-                🚭 CONSEJO ANTITABACO DADO
-              </label>
-            </div>
-          </div>
-        )}
-      </div>
+      <TabaquismoBloque formData={formData} setFormData={setFormData} handleInputChange={handleInputChange} />
 
       <div className="bloque">
         <div className="section-header">🍽️ Alimentación y ejercicio</div>
