@@ -68,5 +68,5 @@ node_modules/
 # dataconnect generated files
 .dataconnect
 
-# Claude Code local settings (permisos personales, no compartir)
-.claude/settings.local.json
+# Carpeta local de Claude Code (permisos, tareas programadas... son estado de tu maquina, no del proyecto)
+.claude/
