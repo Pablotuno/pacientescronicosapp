@@ -33,28 +33,48 @@ const ExploracionForm = ({ formData, setFormData, handleInputChange, calcularRec
   const VALORES_ALERTA_OTROS = [
     { etiqueta: 'Potasio', patrones: ['POTASIO'], unidad: 'mEq/L', esAnormal: (v) => v < 3.5 || v > 5.1 },
     { etiqueta: 'TSH', patrones: ['TSH'], unidad: 'mUI/L', esAnormal: (v) => v < 0.4 || v > 4.0 },
-    { etiqueta: 'Hemoglobina', patrones: ['HEMOGLOBINA', 'HB'], unidad: 'g/dL', esAnormal: (v) => v < 12 },
+    { etiqueta: 'Hemoglobina', patrones: ['HEMOGLOBINA', 'HB'], unidad: 'g/dL', esAnormal: (v) => v < 12, exacto: true },
     { etiqueta: 'PSA', patrones: ['PSA'], unidad: 'ng/mL', esAnormal: (v) => v >= 4.0, soloHombre: true }
   ];
 
+  // Busca el valor numérico de un parámetro en informes de laboratorio donde el nombre va en su
+  // propia línea y el valor aparece en una de las líneas siguientes (a veces tras una línea en
+  // blanco), seguido de la unidad y el rango de referencia en otra línea distinta.
+  // exigirCoincidenciaExacta evita falsos positivos con parámetros de nombre parecido
+  // (p.ej. "HEMOGLOBINA" no debe coincidir con "HEMOGLOBINA CORPUSCULAR MEDIA").
+  const buscarValorEnLineas = (lineasNorm, lineasOriginales, patrones, exigirCoincidenciaExacta) => {
+    for (let i = 0; i < lineasNorm.length; i++) {
+      const linea = lineasNorm[i];
+      if (!linea) continue;
+      const coincide = patrones.some((p) => (exigirCoincidenciaExacta ? linea === p : linea.startsWith(p)));
+      if (!coincide) continue;
+      for (let j = i + 1; j < Math.min(i + 4, lineasNorm.length); j++) {
+        const candidata = (lineasOriginales[j] || '').trim();
+        if (!candidata) continue;
+        const match = candidata.match(/^(\d+[.,]\d+|\d+)/);
+        if (match) return match[1].replace(',', '.');
+        break;
+      }
+    }
+    return null;
+  };
+
   const detectarValoresAnalitica = () => {
-    const textoNormalizado = textoAnalitica
-      .toUpperCase()
-      .normalize('NFD')
-      .replace(/[̀-ͯ]/g, '');
+    const lineasOriginales = textoAnalitica.split('\n');
+    // Se normalizan mayúsculas/acentos y se sustituyen los guiones por espacios para que
+    // nombres como "LDL-COLESTEROL" o "HDL-COLESTEROL" coincidan con los patrones sin guion
+    const lineasNormalizadas = lineasOriginales.map((l) =>
+      l.toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/-/g, ' ').trim()
+    );
 
     const actualizaciones = {};
     const detectados = [];
 
     CAMPOS_ANALITICA.forEach(({ campo, etiqueta, patrones }) => {
-      for (const patron of patrones) {
-        const regex = new RegExp(patron + '\\s*[:\\-]?\\s*(\\d+[.,]\\d+|\\d+)', 'i');
-        const match = textoNormalizado.match(regex);
-        if (match) {
-          actualizaciones[campo] = match[1].replace(',', '.');
-          detectados.push(`${etiqueta}: ${actualizaciones[campo]}`);
-          break;
-        }
+      const valor = buscarValorEnLineas(lineasNormalizadas, lineasOriginales, patrones, false);
+      if (valor !== null) {
+        actualizaciones[campo] = valor;
+        detectados.push(`${etiqueta}: ${valor}`);
       }
     });
 
@@ -72,22 +92,17 @@ const ExploracionForm = ({ formData, setFormData, handleInputChange, calcularRec
     }
 
     const lineasAlerta = [];
-    VALORES_ALERTA_OTROS.forEach(({ etiqueta, patrones, unidad, esAnormal, soloHombre }) => {
+    VALORES_ALERTA_OTROS.forEach(({ etiqueta, patrones, unidad, esAnormal, soloHombre, exacto }) => {
       if (soloHombre && formData.sexo !== 'Hombre') return;
-      for (const patron of patrones) {
-        const regex = new RegExp(patron + '\\s*[:\\-]?\\s*(\\d+[.,]\\d+|\\d+)', 'i');
-        const match = textoNormalizado.match(regex);
-        if (match) {
-          const valor = parseFloat(match[1].replace(',', '.'));
-          if (esAnormal(valor)) {
-            const linea = `${etiqueta} ${valor} ${unidad} (alterado)`;
-            if (!(formData.otros || '').includes(linea)) {
-              lineasAlerta.push(linea);
-            }
-            detectados.push(`⚠️ ${etiqueta}: ${valor}`);
-          }
-          break;
+      const valorTexto = buscarValorEnLineas(lineasNormalizadas, lineasOriginales, patrones, !!exacto);
+      if (valorTexto === null) return;
+      const valor = parseFloat(valorTexto);
+      if (esAnormal(valor)) {
+        const linea = `${etiqueta} ${valor} ${unidad} (alterado)`;
+        if (!(formData.otros || '').includes(linea)) {
+          lineasAlerta.push(linea);
         }
+        detectados.push(`⚠️ ${etiqueta}: ${valor}`);
       }
     });
 
