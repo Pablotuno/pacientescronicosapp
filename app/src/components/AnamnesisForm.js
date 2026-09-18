@@ -5,6 +5,11 @@ const AnamnesisForm = ({ formData, setFormData, handleInputChange, escalasFechaE
   const [showTooltip, setShowTooltip] = useState(false);
   const tooltipTimeoutRef = useRef(null);
   const tooltipRef = useRef(null);
+  const [mostrarPegarTratamiento, setMostrarPegarTratamiento] = useState(false);
+  const [textoTratamiento, setTextoTratamiento] = useState('');
+  const [tratamientoProcesado, setTratamientoProcesado] = useState('');
+  const [avisoTratamiento, setAvisoTratamiento] = useState('');
+  const [copiadoTratamiento, setCopiadoTratamiento] = useState(false);
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
@@ -73,6 +78,118 @@ const AnamnesisForm = ({ formData, setFormData, handleInputChange, escalasFechaE
   const recordatoriosAnamnesis = calcularRecordatorios().filter(
     (recordatorio) => recordatorio.mensaje.includes('Escalas de cronicidad')
   );
+
+  // ===== PROCESADO DE LA HOJA DE TRATAMIENTO PEGADA (PDF de dispensación) =====
+  // Convierte el texto plano copiado de un PDF de tratamiento en una lista de
+  // "PRINCIPIO ACTIVO DOSIS (NOMBRE COMERCIAL) – posología", descartando precios,
+  // aportaciones, números de visado y cabeceras de página repetidas.
+  // Es un resultado "orientativo": el texto pegado se mantiene siempre visible al lado
+  // para que se revise línea a línea antes de copiarlo a otro sitio.
+  const MESES_TRATAMIENTO = 'ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic';
+  const REGEX_POSOLOGIA = /\d+\s+[A-ZÁÉÍÓÚñ()./]+(?:\s+[A-ZÁÉÍÓÚñ()./]+){0,4}?\s+(?:cada|en la|por la)[\s\S]*/i;
+  const REGEX_DOSIS = /[\d.,/]+\s*(?:MG|MCG|G|UI|ML)(?:\/H)?/i;
+
+  const segmentarEntradasTratamiento = (texto) => {
+    const regexFin = new RegExp(`(Aportaci[oó]n\\s*[\\d.,]+\\s*€)|(\\d{2}-(?:${MESES_TRATAMIENTO})-\\d{4})(?=\\s+[A-ZÁÉÍÓÚÑ]{3,}\\s)`, 'g');
+    const cortes = [];
+    let m;
+    while ((m = regexFin.exec(texto)) !== null) cortes.push(m.index + m[0].length);
+    const segmentos = [];
+    let inicio = 0;
+    cortes.forEach((fin) => { segmentos.push(texto.slice(inicio, fin)); inicio = fin; });
+    if (inicio < texto.length) segmentos.push(texto.slice(inicio));
+    return segmentos;
+  };
+
+  const notacionPosologia = (texto) => {
+    const t = texto.toLowerCase();
+    let m = t.match(/(\d+)\s+\S+\s+cada\s+(\d+)\s+horas?/);
+    if (m) {
+      const dosis = m[1];
+      const horas = parseInt(m[2], 10);
+      if (horas === 24) return `${dosis}-0-0`;
+      if (horas === 12) return `${dosis}-0-${dosis}`;
+      if (horas === 8) return `${dosis}-${dosis}-${dosis}`;
+      return null;
+    }
+    m = t.match(/(\d+)\s+\S+\s+cada\s+día/);
+    if (m) return `${m[1]}-0-0`;
+    const manana = /(\d+)\s+\S+\s+(en el desayuno|por la mañana)/.exec(t);
+    const comida = /(\d+)\s+\S+\s+en la comida/.exec(t);
+    const noche = /(\d+)\s+\S+\s+(por la noche|en la cena)/.exec(t);
+    if (manana || comida || noche) return `${manana ? manana[1] : 0}-${comida ? comida[1] : 0}-${noche ? noche[1] : 0}`;
+    return null;
+  };
+
+  const extraerNombreYDosis = (descripcion) => {
+    const sinPrefijoNumerico = descripcion.replace(/^(?:\d+\s+){1,3}(?=[A-ZÁÉÍÓÚÑ]{3,})/, '');
+    const nombre = sinPrefijoNumerico.split(/\d/)[0].trim().replace(/,\s*$/, '');
+    const matchDosis = sinPrefijoNumerico.match(REGEX_DOSIS);
+    return { nombre: nombre || sinPrefijoNumerico.trim(), dosis: matchDosis ? matchDosis[0].replace(/\s+/g, '') : null };
+  };
+
+  const procesarHojaTratamiento = () => {
+    const texto = textoTratamiento.replace(/Paciente:[\s\S]*?Fecha Fin/gi, ' ');
+    const segmentos = segmentarEntradasTratamiento(texto);
+    const lineas = [];
+
+    segmentos.forEach((seg) => {
+      const b = seg
+        .replace(/Número de Visado\/Justificación Clínica Individualizada:[\s\S]*?(?=Precio\*|$)/i, ' ')
+        .replace(/Precio\*[\s\S]*/i, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (!b) return;
+      // Material sanitario (pañales, bolsas de orina, gasas...): no es tratamiento farmacológico
+      if (/(PAÑAL|ABSORB|BOLSA[S]? RECOGIDA|GASA|COMPRESA|APOSITO)/i.test(b)) return;
+
+      const matchPA = b.match(/\[([^\]]+)\]/);
+      const principioActivo = matchPA ? matchPA[1].replace(/\s*\+\s*/g, ' + ').trim() : null;
+
+      const sinCorchete = matchPA
+        ? `${b.slice(0, matchPA.index)} ${b.slice(matchPA.index + matchPA[0].length)}`
+        : b;
+      const sinCorcheteLimpio = sinCorchete.replace(/,\s*,/g, ',').replace(/\s+/g, ' ').trim();
+
+      const matchFecha = sinCorcheteLimpio.match(new RegExp(`\\d{2}-(?:${MESES_TRATAMIENTO})-\\d{4}`, 'i'));
+      const cabecera = matchFecha ? sinCorcheteLimpio.slice(0, matchFecha.index) : sinCorcheteLimpio;
+
+      const matchPosologia = cabecera.match(REGEX_POSOLOGIA);
+      const descripcionProducto = (matchPosologia ? cabecera.slice(0, matchPosologia.index) : cabecera)
+        .replace(/,\s*$/, '').trim();
+      const posologiaTexto = (matchPosologia ? matchPosologia[0] : cabecera)
+        .replace(/CRÓNICO/gi, '').replace(/\s+/g, ' ').trim().replace(/,\s*$/, '');
+
+      if (!descripcionProducto && !posologiaTexto) return;
+
+      const notacion = notacionPosologia(posologiaTexto) || posologiaTexto || '(sin posología detectada, revisar)';
+      const { nombre, dosis } = extraerNombreYDosis(descripcionProducto);
+
+      const linea = principioActivo
+        ? `${principioActivo}${dosis ? ' ' + dosis : ''} (${nombre}) – ${notacion}`
+        : `${nombre}${dosis ? ' ' + dosis : ''} – ${notacion}`;
+      lineas.push(linea);
+    });
+
+    if (lineas.length === 0) {
+      setTratamientoProcesado('');
+      setAvisoTratamiento('⚠️ No se ha reconocido ningún medicamento en el texto pegado.');
+      return;
+    }
+
+    setTratamientoProcesado(lineas.join('\n'));
+    setAvisoTratamiento(`Se han detectado ${lineas.length} medicamento(s). Revísalo antes de copiarlo: el reparto de la posología puede fallar en frases poco habituales.`);
+    setCopiadoTratamiento(false);
+  };
+
+  const copiarTratamientoProcesado = async () => {
+    try {
+      await navigator.clipboard.writeText(tratamientoProcesado);
+      setCopiadoTratamiento(true);
+    } catch (error) {
+      setAvisoTratamiento('⚠️ No se pudo copiar automáticamente. Selecciona el texto a mano y copia con Ctrl+C.');
+    }
+  };
 
   return (
     <div className="section active">
@@ -266,6 +383,60 @@ const AnamnesisForm = ({ formData, setFormData, handleInputChange, escalasFechaE
             onChange={handleInputChange}
           ></textarea>
         </div>
+        <div className="form-group form-group-buttons">
+          <button
+            type="button"
+            onClick={() => setMostrarPegarTratamiento(!mostrarPegarTratamiento)}
+            className="calculate-button calculate-button-secondary"
+          >
+            {mostrarPegarTratamiento ? 'Cerrar' : 'Pegar hoja de tratamiento'}
+          </button>
+        </div>
+        {mostrarPegarTratamiento && (
+          <div className="form-group">
+            <label htmlFor="texto_tratamiento">Pega aquí el texto de la hoja de tratamiento (PDF de dispensación)</label>
+            <textarea
+              id="texto_tratamiento"
+              value={textoTratamiento}
+              onChange={(e) => setTextoTratamiento(e.target.value)}
+              rows="6"
+              placeholder="Pega aquí el texto tal cual lo copias del PDF..."
+            />
+            <button
+              type="button"
+              onClick={procesarHojaTratamiento}
+              className="calculate-button"
+              style={{ marginTop: '8px' }}
+            >
+              Procesar tratamiento
+            </button>
+            {avisoTratamiento && (
+              <div className="info-box" style={{ marginTop: '8px' }}>
+                {avisoTratamiento}
+              </div>
+            )}
+            {tratamientoProcesado && (
+              <div className="form-group" style={{ marginTop: '8px' }}>
+                <label htmlFor="texto_tratamiento_procesado">Resultado (por principio activo y posología)</label>
+                <textarea
+                  id="texto_tratamiento_procesado"
+                  value={tratamientoProcesado}
+                  readOnly
+                  rows="8"
+                  onFocus={(e) => e.target.select()}
+                />
+                <button
+                  type="button"
+                  onClick={copiarTratamientoProcesado}
+                  className="calculate-button"
+                  style={{ marginTop: '8px' }}
+                >
+                  {copiadoTratamiento ? '✔️ Copiado' : 'Copiar'}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="bloque">
