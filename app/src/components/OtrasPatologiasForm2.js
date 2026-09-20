@@ -1,6 +1,15 @@
 import React, { useState, useCallback } from 'react';
 import './OtrasPatologiasForm.css';
 
+// Dietas imprimibles fijas (plantillas generales, no ligadas a un paciente concreto)
+const DIETAS_DISPONIBLES = [
+  { kcal: 1400, archivo: 'dieta-1400-kcal.pdf', etiqueta: '1400 kcal' },
+  { kcal: 1600, archivo: 'dieta-1600-kcal.pdf', etiqueta: '1600 kcal' },
+  { kcal: 1800, archivo: 'dieta-1800-kcal.pdf', etiqueta: '1800 kcal' },
+  { kcal: 2000, archivo: 'dieta-2000-kcal.pdf', etiqueta: '2000 kcal' },
+  { kcal: 2200, archivo: 'dieta-2200-kcal.pdf', etiqueta: '2200 kcal' }
+];
+
 // COMPONENTE DE ESCALA VISUAL DE GRASA CORPORAL
 const EscalaVisualGrasaCorporal = ({ sexo, onSeleccionarPorcentaje, valorActual, onClose }) => {
   const [seleccionado, setSeleccionado] = useState(valorActual || null);
@@ -882,6 +891,46 @@ const OtrasPatologiasForm2 = ({ formData, setFormData, handleInputChange, calcul
                         </div>
                       </div>
                     </div>
+                  );
+                })()}
+              </div>
+
+              {/* Dietas imprimibles */}
+              <div className="analitica-grupo">
+                <div className="section-subheader">🍽️ Dietas imprimibles</div>
+                {(() => {
+                  const caloriasObjetivo = calcularCaloriasObjetivo();
+                  const kcalMasCercana = caloriasObjetivo
+                    ? DIETAS_DISPONIBLES.reduce((masCercana, dieta) =>
+                        Math.abs(dieta.kcal - caloriasObjetivo) < Math.abs(masCercana.kcal - caloriasObjetivo)
+                          ? dieta
+                          : masCercana
+                      ).kcal
+                    : null;
+                  return (
+                    <>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '6px' }}>
+                        {DIETAS_DISPONIBLES.map((dieta) => {
+                          const esRecomendada = dieta.kcal === kcalMasCercana;
+                          return (
+                            <a
+                              key={dieta.kcal}
+                              href={`${process.env.PUBLIC_URL}/dietas/${dieta.archivo}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="calculate-button"
+                              style={esRecomendada ? { backgroundColor: '#27ae60', borderColor: '#27ae60' } : {}}
+                            >
+                              {esRecomendada ? '⭐ ' : ''}{dieta.etiqueta}
+                            </a>
+                          );
+                        })}
+                      </div>
+                      <div style={{ fontSize: '12px', color: '#666', marginTop: '6px' }}>
+                        Se abre en una pestaña nueva; desde ahí puedes imprimirla (Ctrl+P) o guardarla.
+                        {kcalMasCercana && ' ⭐ = la más cercana a las calorías objetivo calculadas arriba.'}
+                      </div>
+                    </>
                   );
                 })()}
               </div>
