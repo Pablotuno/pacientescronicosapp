@@ -858,6 +858,41 @@ const PlanForm = ({ formData, setFormData, handleInputChange }) => {
       });
     }
     texto += ` FUMADOR: ${get('fumador')}\n`;
+    if (formData.fumador === 'Sí') {
+      if (formData.observaciones_fumador) {
+        texto += `\t- Observaciones: ${formData.observaciones_fumador}\n`;
+      }
+      const ESTADIOS_CAMBIO_TEXTO = {
+        precontemplacion: 'Precontemplación (no se lo plantea)',
+        contemplacion: 'Contemplación (ambivalente)',
+        preparacion: 'Preparación (quiere dejarlo)',
+        accion: 'Acción (dejó de fumar hace menos de 6 meses)',
+        mantenimiento: 'Mantenimiento (más de 6 meses sin fumar)'
+      };
+      if (formData.estadio_cambio) {
+        texto += `\t- Estadio de cambio: ${ESTADIOS_CAMBIO_TEXTO[formData.estadio_cambio] || formData.estadio_cambio}\n`;
+      }
+      if (formData.cigarrillos_dia) {
+        texto += `\t- Cigarrillos/día: ${formData.cigarrillos_dia}\n`;
+      }
+      const respondioFagerstrom = [1, 2, 3, 4, 5, 6].some((n) => formData[`fagerstrom_${n}`]);
+      if (respondioFagerstrom) {
+        const fagerScore = [1, 2, 3, 4, 5, 6].reduce(
+          (acc, n) => acc + parseInt(formData[`fagerstrom_${n}`] || '0', 10), 0
+        );
+        const dependencia = fagerScore >= 7 ? 'alta' : fagerScore >= 4 ? 'moderada' : 'baja';
+        texto += `\t- Test de Fagerström: ${fagerScore}/10 (dependencia ${dependencia})\n`;
+      }
+      texto += `\t- Intento de abandono en el último año: ${formData.intento_ultimo_ano ? 'Sí' : 'No'}\n`;
+      texto += `\t- Consejo antitabaco / intervención motivacional: ${formData.consejo_antitabaco ? 'Dado' : 'No dado'}\n`;
+      if (formData.estadio_cambio === 'preparacion' || formData.estadio_cambio === 'accion') {
+        texto += `\t- Farmacoterapia valorada: ${formData.farmacoterapia_valorada ? 'Sí' : 'No'}\n`;
+      }
+      texto += `\t- Seguimiento citado: ${formData.seguimiento_citado ? 'Sí' : 'No'}\n`;
+      if (formData.fecha_dia_d) {
+        texto += `\t- Día D (fecha de abandono): ${formData.fecha_dia_d}\n`;
+      }
+    }
     if (formData.alimentacion) {
       texto += ` HÁBITOS ALIMENTACIÓN: ${get('alimentacion')}\n`;
     }
