@@ -894,7 +894,12 @@ const PlanForm = ({ formData, setFormData, handleInputChange }) => {
       }
     }
     if (formData.alimentacion) {
-      texto += ` HÁBITOS ALIMENTACIÓN: ${get('alimentacion')}\n`;
+      texto += ` HÁBITOS ALIMENTACIÓN:\n`;
+      formData.alimentacion.split('\n').forEach(linea => {
+        if (linea.trim()) {
+          texto += `\t${linea.trim()}\n`;
+        }
+      });
     }
     if (formData.ejercicio_fisico) {
       texto += ` EJERCICIO FÍSICO: ${get('ejercicio_fisico')}\n`;

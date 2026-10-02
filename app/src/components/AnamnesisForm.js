@@ -167,8 +167,8 @@ const AnamnesisForm = ({ formData, setFormData, handleInputChange, escalasFechaE
       const { nombre, dosis } = extraerNombreYDosis(descripcionProducto);
 
       const linea = principioActivo
-        ? `${principioActivo}${dosis ? ' ' + dosis : ''} (${nombre}) – ${notacion}`
-        : `${nombre}${dosis ? ' ' + dosis : ''} – ${notacion}`;
+        ? `${principioActivo}${dosis ? ' ' + dosis : ''} (${nombre}) - ${notacion}`
+        : `${nombre}${dosis ? ' ' + dosis : ''} - ${notacion}`;
       lineas.push(linea);
     });
 

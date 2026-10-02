@@ -23,7 +23,7 @@ const ExploracionForm = ({ formData, setFormData, handleInputChange, calcularRec
     { campo: 'hba1c', etiqueta: 'HbA1c', patrones: ['HBA1C', 'HEMOGLOBINA GLICOSILADA', 'HEMOGLOBINA GLICADA'] },
     { campo: 'creatinina', etiqueta: 'Creatinina', patrones: ['CREATININA'] },
     { campo: 'fg', etiqueta: 'Filtrado glomerular', patrones: ['FILTRADO GLOMERULAR', 'FG (CKD-EPI)', 'CKD-EPI', 'MDRD', 'FG ESTIMADO', 'FG'] },
-    { campo: 'microalbumina', etiqueta: 'Microalbúmina', patrones: ['COCIENTE ALBUMINA/CREATININA', 'MICROALBUMINA', 'ALBUMINA/CREATININA'] },
+    { campo: 'microalbumina', etiqueta: 'Microalbúmina', patrones: ['COCIENTE ALBUMINA/CREATININA', 'MICROALBUMINA', 'ALBUMINA/CREATININA', 'ALBUMINURIA'] },
     { campo: 'col_total', etiqueta: 'Colesterol total', patrones: ['COLESTEROL TOTAL'] },
     { campo: 'hdl', etiqueta: 'HDL', patrones: ['COLESTEROL HDL', 'HDL COLESTEROL', 'HDL'] },
     { campo: 'ldl', etiqueta: 'LDL', patrones: ['COLESTEROL LDL', 'LDL COLESTEROL', 'LDL'] }
@@ -174,21 +174,20 @@ const ExploracionForm = ({ formData, setFormData, handleInputChange, calcularRec
     const ta_sistolica_brazo = parseFloat(formData.itb_brazo);
     const ta_tobillo_izquierdo = parseFloat(formData.pas_tobillo_izquierdo);
     const ta_tobillo_derecho = parseFloat(formData.pas_tobillo_derecho);
-    let itb_pie_izquierdo = '';
-    let itb_pie_derecho = '';
+    const nuevosValores = {};
 
     if (ta_sistolica_brazo > 0 && ta_tobillo_izquierdo > 0) {
-      itb_pie_izquierdo = (ta_tobillo_izquierdo / ta_sistolica_brazo).toFixed(2);
+      nuevosValores.itb_pie_izquierdo = (ta_tobillo_izquierdo / ta_sistolica_brazo).toFixed(2);
     }
     if (ta_sistolica_brazo > 0 && ta_tobillo_derecho > 0) {
-      itb_pie_derecho = (ta_tobillo_derecho / ta_sistolica_brazo).toFixed(2);
+      nuevosValores.itb_pie_derecho = (ta_tobillo_derecho / ta_sistolica_brazo).toFixed(2);
     }
 
-    setFormData({ 
-      ...formData, 
-      itb_pie_izquierdo, 
-      itb_pie_derecho 
-    });
+    // Si no hay presiones suficientes para calcular, no tocamos los campos: puede que el
+    // valor de ITB se haya introducido directamente a mano (p.ej. desde una máquina que ya lo da hecho).
+    if (Object.keys(nuevosValores).length > 0) {
+      setFormData({ ...formData, ...nuevosValores });
+    }
   };
 
   const handlePasInput = (e) => {
@@ -1357,7 +1356,7 @@ const ExploracionForm = ({ formData, setFormData, handleInputChange, calcularRec
             <div className="form-row">
               <div className="form-group">
                 <span style={{ fontSize: '12px', color: '#666' }}>
-                  Se calcula solo si rellenas PAS brazo + tobillo. También podés escribir el resultado directamente si ya lo tenés.
+                  Se calcula solo si rellenas PAS brazo + tobillo. También puedes escribir el resultado directamente si ya lo tienes (p.ej. desde la máquina de los 4 manguitos).
                 </span>
               </div>
             </div>
